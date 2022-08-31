@@ -1,4 +1,5 @@
 #include<server.h>
+#include<socket.h>
 
 server::server()
 {

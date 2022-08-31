@@ -1,4 +1,5 @@
 #include<client.h>
+#include<socket.h>
 
 client::client()
 {
