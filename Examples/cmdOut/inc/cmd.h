@@ -16,7 +16,6 @@ class RoutingTable
 		RoutingTable();
 		void getRoutingTable();
 		void storeRoutingTable();
-		void setRoutingTable();
 		void displayRoutingTable();
 		~RoutingTable();
 

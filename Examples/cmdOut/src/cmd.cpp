@@ -5,16 +5,15 @@ RoutingTable::RoutingTable()
 
 void RoutingTable::getRoutingTable()
 {
-	if(fork()==0)
-	{
+	
 		int file=open("myFile.txt",O_WRONLY | O_CREAT ,0777);
 		int file2=dup2(file,STDOUTNO);
 		close(file);{
 		char* cmd="netstat";
-		char *args[]={"netstat","-r",NULL};
+		char *args[]={"netstat","-r",NULL};	
 		int status=execvp(cmd,args);
 		exit(EXIT_SUCCESS);
-	}
+	
 }
 
 void RoutingTable::storeRoutingTable()
@@ -33,6 +32,8 @@ void RoutingTable::storeRoutingTable()
 			dataList.push_back(line);
 		}
 	}
+	fs.close();
+}
 
 void RoutingTable::displayRoutingTable()
 {
