@@ -5,18 +5,34 @@ RoutingTable::RoutingTable()
 
 void RoutingTable::getRoutingTable()
 {
-	fstream fs;
-	fs.open("myRT.txt",ios::in|ios::out);
+	if(fork()==0)
+	{
+		int file=open("myFile.txt",O_WRONLY | O_CREAT ,0777);
+		int file2=dup2(file,STDOUTNO);
+		close(file);{
+		char* cmd="netstat";
+		char *args[]={"netstat","-r",NULL};
+		int status=execvp(cmd,args);
+		exit(EXIT_SUCCESS);
+	}
+}
 
+void RoutingTable::storeRoutingTable()
+{
+	fstream fs;
+	fs.open("myFile.txt",ios::in|ios::out);
 	if(!fs)
 	{
-		cout<<"File do not exist"<<endl;
+		cout<<"No such File"<<endl;
 	}
 	else
 	{
-		fs<<execvp(cmd,args);
+		string line;
+		while(getline(fs,line))
+		{
+			dataList.push_back(line);
+		}
 	}
-}
 
 void RoutingTable::displayRoutingTable()
 {

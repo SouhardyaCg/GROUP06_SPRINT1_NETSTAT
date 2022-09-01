@@ -1,6 +1,12 @@
 #include<iostream>
 #include<string>
 #include<fstream>
+#include<list>
+#include<stdio.h>
+#include<unistd.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<fcntl.h>
 
 using namespace std;
 
@@ -8,8 +14,10 @@ class RoutingTable
 {
 	public :
 		RoutingTable();
-		void getRoutingTable;
-		void displayRoutingTable;
+		void getRoutingTable();
+		void storeRoutingTable();
+		void setRoutingTable();
+		void displayRoutingTable();
 		~RoutingTable();
 
 	private :
@@ -21,4 +29,6 @@ class RoutingTable
 		string Window;
 		string irtt;
 		string Iface;
+
+		list <string> dataList;
 };
