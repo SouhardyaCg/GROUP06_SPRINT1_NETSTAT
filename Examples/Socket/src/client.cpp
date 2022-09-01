@@ -60,6 +60,7 @@ void client::clientReadWrite()
 	}
 	cout <<"Recived from Server : "<<server_msg<<endl;
 	close(socket_cfd);
+	shutdown(socket_cfd,SHUT_RDWR);
 }
 client::~client()
 {

@@ -67,8 +67,7 @@ void server::serverFunc()
 void server::serverReadWrite()
 {	
 	memset(client_msg, '\0' , sizeof(client_msg));
-	int re=recvfrom(socket_sfd, client_msg, SIZE, 0 ,(struct sockaddr*)&client_addr,(socklen_t*)&len);
-
+	int re=recvfrom(acceptClient, client_msg, SIZE, 0 ,(struct sockaddr*)&client_addr,(socklen_t*)&len);
 	if(re < 0 )
 	{
 		perror("RECV Error");
@@ -78,7 +77,9 @@ void server::serverReadWrite()
 
 	memset(server_msg, '\0', sizeof(server_msg));
 
-	if(sendto(socket_sfd, server_msg, strlen(server_msg), 0,(struct sockaddr*)&client_addr , len)<0 )
+	strcpy(server_msg,"Hello I am Server");
+
+	if(sendto(acceptClient, server_msg, strlen(server_msg), 0,(struct sockaddr*)&client_addr , len)<0 )
 	{
 		perror("Send error");
 		exit(EXIT_FAILURE);
@@ -86,7 +87,7 @@ void server::serverReadWrite()
 	cout<<"Sent server message (" << server_msg <<" ) to client  \n"<<endl;
 	
 	close(socket_sfd);
-//	shutdown(socket_sfd, SHUT_RDWR);
+	shutdown(socket_sfd, SHUT_RDWR);
 }
 
 
