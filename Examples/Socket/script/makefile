@@ -9,8 +9,8 @@ INCLUDE = inc/
 
 all: server client 
 
-server: $(OBJ)/mainServer.o $(OBJ)/socket.o $(OBJ)/server.o
-	$(CC) $(LDFLAGS) $(BIN)/server $(OBJ)/mainServer.o $(OBJ)/socket.o $(OBJ)/server.o
+server: $(OBJ)/mainServer.o $(OBJ)/server.o
+	$(CC) $(LDFLAGS) $(BIN)/server $(OBJ)/mainServer.o $(OBJ)/server.o
 
 $(OBJ)/mainServer.o: $(SRC)/mainServer.cpp
 	$(CC) $(CPPFLAGS) $(SRC)/mainServer.cpp $(IFLAGS) $(INCLUDE)
@@ -20,8 +20,8 @@ $(OBJ)/server.o : $(SRC)/server.cpp
 	$(CC) $(CPPFLAGS) $(SRC)/server.cpp $(IFLAGS) $(INCLUDE)
 	mv *.o $(OBJ)/
 
-client: $(OBJ)/mainClient.o $(OBJ)/client.o $(OBJ)/socket.o
-	$(CC) $(LDFLAGS) $(BIN)/client $(OBJ)/mainClient.o $(OBJ)/client.o $(OBJ)/socket.o
+client: $(OBJ)/mainClient.o $(OBJ)/client.o
+	$(CC) $(LDFLAGS) $(BIN)/client $(OBJ)/mainClient.o $(OBJ)/client.o
 
 $(OBJ)/mainClient.o: $(SRC)/mainClient.cpp
 	$(CC) $(CPPFLAGS) $(SRC)/mainClient.cpp $(IFLAGS) $(INCLUDE)
@@ -30,10 +30,6 @@ $(OBJ)/mainClient.o: $(SRC)/mainClient.cpp
 $(OBJ)/client.o : $(SRC)/client.cpp
 	$(CC) $(CPPFLAGS) $(SRC)/client.cpp $(IFLAGS) $(INCLUDE)
 	mv *.o $(OBJ)/
-
-$(OBJ)/socket.o : $(SRC)/socket.cpp
-	 $(CC) $(CPPFLAGS) $(SRC)/socket.cpp $(IFLAGS) $(INCLUDE)
-	 mv *.o $(OBJ)/
 
 
 valgrindServer : $(BIN)/server

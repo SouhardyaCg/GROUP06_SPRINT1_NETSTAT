@@ -1,12 +1,11 @@
 #include<client.h>
-#include<socket.h>
 
 int main()
 {
-	socketClass *sock;
-	client *c;
-	sock = c;
-	//sock->clientFunc();
+	client c;
+	c.clientFunc();
+	c.clientReadWrite();
+
 
 	return 0;
 

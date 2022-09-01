@@ -1,9 +1,12 @@
 #include<iostream>
-#include<iostream>
 #include<unistd.h>
-#include<netinet/in.h>
+#include<sys/socket.h>
 #include<arpa/inet.h>
-#include<socket.h>
+#include<netinet/in.h>
+#include<sys/wait.h>
+#include<stdlib.h>
+#include<bits/stdc++.h>
+#include<errno.h>
 
 #define PORT 52341
 #define MAXBUFF 1024
@@ -11,9 +14,10 @@
 
 using namespace std;
 
-class client : public socketClass
+class client 
 {
 	private:
+		int socket_cfd;
 		int connection;
 
 		struct sockaddr_in server_addr, client_addr;
