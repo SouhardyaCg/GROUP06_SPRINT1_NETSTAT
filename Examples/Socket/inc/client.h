@@ -7,15 +7,20 @@
 
 #define PORT 52341
 #define MAXBUFF 1024
+#define SIZE 1024
 
 using namespace std;
 
-class client::private socket
+class client : public socketClass
 {
 	private:
 		int connection;
 
 		struct sockaddr_in server_addr, client_addr;
+		socklen_t len = sizeof(client_addr);
+
+		char server_msg[SIZE];
+		char client_msg[SIZE];
 
 
 	public:

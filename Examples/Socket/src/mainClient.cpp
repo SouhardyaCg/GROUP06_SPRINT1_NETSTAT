@@ -3,9 +3,10 @@
 
 int main()
 {
-
-	client c;
-	c.clientFunc();
+	socketClass *sock;
+	client *c;
+	sock = c;
+	//sock->clientFunc();
 
 	return 0;
 

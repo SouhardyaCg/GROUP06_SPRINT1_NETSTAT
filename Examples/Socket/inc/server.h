@@ -2,14 +2,16 @@
 #include<unistd.h>
 #include<netinet/in.h>
 #include<arpa/inet.h>
-#include<socket.h>
+//#include<socket.h>
+#include"socket.h"
 
 #define PORT 52341
 #define MAXBUFF 1024
+#define SIZE 1024
 
 using namespace std;
 
-class server::private socket
+class server : public socketClass
 {
 
 	private:
@@ -27,6 +29,7 @@ class server::private socket
 	public:
 		server(); //constructor
 		void serverFunc();
+		//string func(string);
 		void serverReadWrite();
-		~server() //Destructor
+		~server(); //Destructor
 };

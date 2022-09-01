@@ -28,24 +28,27 @@ void client::clientFunc()
 	}
 }
 void client::clientReadWrite()
-{
+{	
+	string str ;
+	cout<<"Enter a message :"<<endl;
+	cin>>str;
 	string s=(const char*)str.c_str();
 	strcpy(client_msg , (const char*)s.c_str() );
 	cout<<"Client message  : " <<client_msg <<endl;
-	if(sendto(int sd,client_msg,strlen(client_msg),0,(struct sockaddr*)&serveraddr,server_addr_len) < 0)
+	if(sendto(socketfd,client_msg,strlen(client_msg),0,(struct sockaddr*)&server_addr,len) < 0)
 	{
 		perror(" Send eror");
 		exit(EXIT_FAILURE);
 	}
 	cout<<"Send  ( "<<client_msg<<" ) to the server "<<endl;
 	sleep(1);
-	if(recvfrom(sd, server_msg, sizeof(server_msg),0,(struct sockaddr*)&clientaddr,(socklen_t*)&client_addr_len)<0)
+	if(recvfrom(socketfd, server_msg, sizeof(server_msg),0,(struct sockaddr*)&client_addr,(socklen_t*)&len)<0)
 	{
 		perror("Recv error");
 		exit(EXIT_FAILURE);
 	}
 	cout <<"Recived from Server : "<<server_msg<<endl;
-	close(sd);
+	close(socketfd);
 }
 client::~client()
 {

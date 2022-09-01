@@ -11,7 +11,6 @@ all: server client
 
 server: $(OBJ)/mainServer.o $(OBJ)/socket.o $(OBJ)/server.o
 	$(CC) $(LDFLAGS) $(BIN)/server $(OBJ)/mainServer.o $(OBJ)/socket.o $(OBJ)/server.o
-	mv server $(BIN)/
 
 $(OBJ)/mainServer.o: $(SRC)/mainServer.cpp
 	$(CC) $(CPPFLAGS) $(SRC)/mainServer.cpp $(IFLAGS) $(INCLUDE)
@@ -23,7 +22,6 @@ $(OBJ)/server.o : $(SRC)/server.cpp
 
 client: $(OBJ)/mainClient.o $(OBJ)/client.o $(OBJ)/socket.o
 	$(CC) $(LDFLAGS) $(BIN)/client $(OBJ)/mainClient.o $(OBJ)/client.o $(OBJ)/socket.o
-	mv client $(BIN)/
 
 $(OBJ)/mainClient.o: $(SRC)/mainClient.cpp
 	$(CC) $(CPPFLAGS) $(SRC)/mainClient.cpp $(IFLAGS) $(INCLUDE)
@@ -32,6 +30,11 @@ $(OBJ)/mainClient.o: $(SRC)/mainClient.cpp
 $(OBJ)/client.o : $(SRC)/client.cpp
 	$(CC) $(CPPFLAGS) $(SRC)/client.cpp $(IFLAGS) $(INCLUDE)
 	mv *.o $(OBJ)/
+
+$(OBJ)/socket.o : $(SRC)/socket.cpp
+	 $(CC) $(CPPFLAGS) $(SRC)/socket.cpp $(IFLAGS) $(INCLUDE)
+	 mv *.o $(OBJ)/
+
 
 valgrindServer : $(BIN)/server
 	valgrind --leak-check=full --show-reachable=yes $(BIN)server 1>$(BIN)/valgrind_s.txt

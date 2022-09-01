@@ -6,17 +6,23 @@
 #include<sys/wait.h>
 #include<stdlib.h>
 #include<bits/stdc++.h>
+#include<errno.h>
+
+#ifndef _socketClass_H
+#define _socketClass_H
+
 
 using namespace std;
 
-class socket()
+class socketClass
 {
 
-	private:
+	protected:
 		int socketfd;
 
 	public:
-		socket(); //constructor
+		socketClass(); //constructor
 		void socketCreate(); 
-		~socket(); //Destructor
+		~socketClass(); //Destructor
 };
+#endif

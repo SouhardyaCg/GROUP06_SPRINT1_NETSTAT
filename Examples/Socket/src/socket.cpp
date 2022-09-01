@@ -1,10 +1,10 @@
 #include<socket.h>
 
-socket::socket()
+socketClass::socketClass()
 {
 
 }
-void socket::socketCreate()
+void socketClass::socketCreate()
 {
 	socketfd = socket(AF_INET, SOCK_STREAM, 0);
 	if(socketfd < 0)
@@ -15,7 +15,7 @@ void socket::socketCreate()
 
 }
 
-socket::~socket()
+socketClass::~socketClass()
 {
 
 }
