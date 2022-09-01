@@ -7,12 +7,14 @@
 #include <fcntl.h>
 #include <sys/wait.h>
 #include<list>
+#include<sstream>
+#include<cstring>
 
 using namespace std;
 
 int main()
 {
-	
+	char data[20][20];
 	cout<<"The begining"<<endl;
 	if(fork()==0)
 	{
@@ -39,18 +41,41 @@ int main()
 		list <string> myList;
 		fs.open("myFile.txt", ios::in|ios::out);
 		string line;
+		int count=0;
 		while(getline(fs,line))
 		{
-			myList.push_back(line);
+			count++;
+			if(count>2)
+				myList.push_back(line);
+			else
+				continue;
 		}
 		cout<<"In list"<<endl;
-		auto it=myList.begin();
-		for(advance(it,2);it!=myList.end();it++)
+		for(auto it=myList.begin();it!=myList.end();it++)
 		{
 			cout<<*it<<endl;
 		}
-			
+		int i=0;
+		for(auto it=myList.begin();it!=myList.end();it++)
+		 {
+			string str=*it;
+			stringstream st(str);
+			string temp;
+														                while(st)											        {
+																	st>>temp;
+				if(st)
+			 	{
+					strcpy(data[i],temp.c_str());
+					i++;
+				}
+				
+																}
+		 }		
 		
+		for(int i=2;i<myList.size()*8;i+=8)
+		{
+			cout<<data[i]<<endl;
+		}
 		cout<<"The End"<<endl;
 	}
 }
