@@ -23,12 +23,15 @@ int main()
 			string str=*it;
 			stringstream st(str);
 			string temp;
+			int j=0;
 			while(st)
 			{
 				st>>temp;
 				if(st)
 				{
-				strcpy(data[i],temp);
+//					cout<<"Temp="<<temp<<endl;
+					strcpy(data[j],temp.c_str());
+					j++;
 				}
 			}
 			obj[i].setDestination(data);

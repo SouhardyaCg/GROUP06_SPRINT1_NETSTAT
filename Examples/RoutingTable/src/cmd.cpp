@@ -4,11 +4,11 @@ void getRoutingTable()
 {
 	
 		int file=open("myFile.txt",O_WRONLY | O_CREAT ,0777);
-		int file2=dup2(file,STDOUT_FILENO);
+		dup2(file,STDOUT_FILENO);
 		close(file);
 		char* cmd="netstat";
 		char *args[]={"netstat","-r",NULL};	
-		int status=execvp(cmd,args);
+		execvp(cmd,args);
 		exit(EXIT_SUCCESS);
 	
 }
@@ -38,33 +38,12 @@ void storeRoutingTable(list<string> &dataList)
 
 }
 
-setData(list<string> &dataList , char **data)
-{
-	int i=0;
-	for(auto it=dataList.begin();it!=dataList.end();it++)
-	{
-		string str=*it;
-		stringstream st(str);
-		string temp;
-		while(st)
-		{
-			st>>temp;
-			if(st)
-			{
-				strcpy(data[i],temp.c_str());
-				i++;
-			}
-		}
-	}
-
-}
-
 RoutingTable :: RoutingTable()
 {}
 
 void RoutingTable :: setDestination(char data[][20])
 {
-	strcpy(Destination,data[0]);	
+	Destination=data[0];	
 }
 string RoutingTable :: getDestination()
 {
@@ -72,7 +51,7 @@ string RoutingTable :: getDestination()
 }
 void RoutingTable :: setGateway(char data[][20])
 {
-	strcpy(Gateway,data[1]);
+	Gateway=data[1];
 }
 string RoutingTable :: getGateway()
 {
@@ -80,7 +59,7 @@ string RoutingTable :: getGateway()
 }
 void RoutingTable :: setGenmask(char data[][20])
 {
-	strcpy(Genmask,data[2]);
+	Genmask=data[2];
 }
 string RoutingTable :: getGenmask()
 {
@@ -88,7 +67,7 @@ string RoutingTable :: getGenmask()
 }
 void RoutingTable :: setFlags(char data[][20])
 {
-	strcpy(Flags,data[3]);
+	Flags=data[3];
 }
 string RoutingTable :: getFlags()
 {
@@ -96,7 +75,7 @@ string RoutingTable :: getFlags()
 }
 void RoutingTable :: setMss(char data[][20])
 {
-	strcpy(Mss,data[4];
+	Mss=data[4];
 }
 string RoutingTable :: getMss()
 {
@@ -104,7 +83,7 @@ string RoutingTable :: getMss()
 }
 void RoutingTable :: setWindow(char data[][20])
 {
-	strcpy(Window,data[5]);
+	Window=data[5];
 }
 string RoutingTable :: getWindow()
 {
@@ -112,7 +91,7 @@ string RoutingTable :: getWindow()
 }
 void RoutingTable :: setirtt(char data[][20])
 {
-	strcpy(irtt,data[6]);
+	irtt=data[6];
 }
 string RoutingTable :: getirtt()
 {
@@ -120,7 +99,7 @@ string RoutingTable :: getirtt()
 }
 void RoutingTable :: setIface(char data[][20])
 {
-	strcpy(Iface,data[7]);
+	Iface=data[7];
 }
 string RoutingTable :: getIface()
 {

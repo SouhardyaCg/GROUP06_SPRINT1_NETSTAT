@@ -14,7 +14,7 @@ all: cmd
 cmd: $(OBJ)/main.o $(OBJ)/cmd.o
 	$(CC) $(LDFLAGS) $(BIN)/cmd $(OBJ)/main.o $(OBJ)/cmd.o
 
-$(OBJ)/main.o: $(src)/main.cpp
+$(OBJ)/main.o: $(SRC)/main.cpp
 	$(CC) $(CCFLAGS) $(SRC)/main.cpp  $(IFLAGS) $(INC)/
 	mv *.o $(OBJ)/
 	
@@ -24,5 +24,5 @@ $(OBJ)/cmd.o: $(SRC)/cmd.cpp
 
 clean:
 	rm $(OBJ)/*.o
-	rm $(BIN)/cmd $(BIN)
+	rm $(BIN)/cmd 
 	@echo "Cleaning Done!"

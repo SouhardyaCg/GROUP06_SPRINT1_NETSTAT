@@ -53,5 +53,4 @@ class RoutingTable
 
 void getRoutingTable();
 void storeRoutingTable(list<string> &);
-void setData(list<string> &,char **);
 
