@@ -9,8 +9,13 @@
 #include<fcntl.h>
 #include<fstream>
 #include<sys/wait.h>
+<<<<<<< HEAD
 #include<sstream>
 #include<cstring>
+=======
+#include<cstring>
+#include<sstream>
+>>>>>>> fb0010ba5df7005943829d189f92fa76de1949d4
 
 using namespace std;
 
@@ -20,6 +25,11 @@ class RoutingTable
 		RoutingTable();
 		void getRoutingTable();
 		void storeRoutingTable();
+		void setData();
+		void setDestination();
+		string getDestination();
+		void setGateway();
+		string getGateway();
 		void displayRoutingTable();
 		void setData();
 		void setDestination();

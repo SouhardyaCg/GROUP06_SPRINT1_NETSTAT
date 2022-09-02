@@ -65,12 +65,30 @@ void RoutingTable :: setDestination()
 {
 	for(int i=0;i<dataList.size()*8;i+=8)
 	{
+<<<<<<< HEAD
 		Destination.append(strcat(data[i]," "));
+=======
+		Destination.append(strcat(data[i],"  "));
+>>>>>>> fb0010ba5df7005943829d189f92fa76de1949d4
 	}
 }
 string RoutingTable :: getDestination()
 {
 	return Destination;
+<<<<<<< HEAD
+=======
+}
+void RoutingTable :: setGateway()
+{
+	for(int i=1;i<dataList.size()*8;i+=8)
+	{
+		Gateway.append(strcat(data[i],"  "));
+	}
+}
+string RoutingTable :: getGateway()
+{
+	return Gateway;
+>>>>>>> fb0010ba5df7005943829d189f92fa76de1949d4
 }
 
 

@@ -75,7 +75,7 @@ void server::serverReadWrite()
 		exit(EXIT_FAILURE);
 	}
 
-	memset(server_msg, '\0', sizeof(server_msg));
+//	memset(server_msg, '\0', sizeof(server_msg));
 
 	if(strcmp(client_msg,"netstat -r")==0)
 	{
@@ -99,6 +99,7 @@ void server::serverReadWrite()
 			wait(0);
 			rt.storeRoutingTable();
 			rt.setData();
+<<<<<<< HEAD
 			rt.setGateway();
 			
 		
@@ -112,6 +113,27 @@ void server::serverReadWrite()
 			
 		}
 	cout<<"Sent server message to client  \n"<<endl;
+=======
+			rt.setDestination();
+			strcpy(server_msg,rt.getDestination().c_str());
+			if(sendto(acceptClient, server_msg, strlen(server_msg), 0,(struct sockaddr*)&client_addr , len)<0 )
+			{
+					perror("Send error");
+					exit(EXIT_FAILURE);
+			}
+//			memset(server_msg, '\0', sizeof(server_msg));
+//			rt.setGateway();
+//			strcpy(server_msg,rt.getDestination().c_str());
+//			if(sendto(acceptClient, server_msg, strlen(server_msg), 0,(struct sockaddr*)&client_addr , len)<0 )
+//			{
+//				perror("Send error");
+//				 exit(EXIT_FAILURE);
+//			}
+			
+		}
+		
+	cout<<"Sent server message (" << server_msg <<" ) to client  \n"<<endl;
+>>>>>>> fb0010ba5df7005943829d189f92fa76de1949d4
 
 	}
 	
