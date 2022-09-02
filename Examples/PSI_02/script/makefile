@@ -12,7 +12,7 @@ all: server client
 server: $(OBJ)/mainServer.o $(OBJ)/server.o $(OBJ)/cmd.o
 	$(CC) $(LDFLAGS) $(BIN)/server $(OBJ)/mainServer.o $(OBJ)/server.o $(OBJ)/cmd.o
 
-$(OBJ)/mainServer.o: $(SRC)/mainServer.cpp 
+$(OBJ)/mainServer.o : $(SRC)/mainServer.cpp 
 	$(CC) $(CPPFLAGS) $(SRC)/mainServer.cpp $(IFLAGS) $(INCLUDE)
 	mv *.o $(OBJ)/
 
@@ -28,7 +28,7 @@ $(OBJ)/cmd.o : $(SRC)/cmd.cpp
 client: $(OBJ)/mainClient.o $(OBJ)/client.o
 	$(CC) $(LDFLAGS) $(BIN)/client $(OBJ)/mainClient.o $(OBJ)/client.o
 
-$(OBJ)/mainClient.o: $(SRC)/mainClient.cpp
+$(OBJ)/mainClient.o : $(SRC)/mainClient.cpp
 	$(CC) $(CPPFLAGS) $(SRC)/mainClient.cpp $(IFLAGS) $(INCLUDE)
 	mv *.o $(OBJ)/
 
@@ -43,7 +43,6 @@ valgrindClient : $(BIN)/client
 	valgrind --leak-check=full --show-reachable=yes $(BIN)client 1>$(BIN)/valgrind_c.txt
 
 clean:
-	rm a.out *.o
 	rm $(OBJ)/*.o
 	rm $(BIN)/server $(BIN)/client
 	rm -f $(BIN)/valgrind_s.txt

@@ -65,14 +65,106 @@ void RoutingTable :: setDestination()
 {
 	for(int i=0;i<dataList.size()*8;i+=8)
 	{
-		strcpy(Destination[i],data[i];
+		Destination.append(strcat(data[i]," "));
 	}
 }
-void RoutingTable :: getDestination()
+string RoutingTable :: getDestination()
 {
-	return Destination[];
+	return Destination;
 }
-void RoutingTable::displayRoutingTable()
+
+
+void RoutingTable :: setGateway()
+{
+	for(int i=1;i<dataList.size()*8;i+=8)
+	{
+		Gateway.append(strcat(data[i]," "));
+	}
+}
+string RoutingTable :: getGateway()
+{
+	return Gateway;
+}
+
+
+void RoutingTable :: setGenmask()
+{
+	for(int i=2;i<dataList.size()*8;i+=8)
+	{
+		 Genmask.append(strcat(data[i]," "));
+	}
+}
+
+string RoutingTable :: getGenmask()
+{
+	return Genmask;
+}
+
+void RoutingTable :: setFlags()
+{
+	for(int i=3;i<dataList.size()*8;i+=8)
+	{
+		Flags.append(strcat(data[i]," "));
+	}
+}
+
+string RoutingTable :: getFlags()
+{
+	return Flags;
+}
+
+void RoutingTable :: setMss()
+{
+	for(int i=4;i<dataList.size()*8;i+=8)
+	{
+		Mss.append(strcat(data[i]," "));
+	}
+}
+string RoutingTable :: getMss()
+{
+	return Mss;
+}
+
+void RoutingTable :: setWindow()
+{
+	for(int i=5;i<dataList.size()*8;i+=8)
+	{
+		Window.append(strcat(data[i]," "));
+	}
+}
+string RoutingTable :: getWindow()
+{
+	return Window;
+}
+
+
+void RoutingTable :: setirtt()
+{
+	for(int i=6;i<dataList.size()*8;i+=8)
+	{
+		 irtt.append(strcat(data[i]," "));
+	}
+}
+string RoutingTable :: getirtt()
+{
+	return irtt;
+}
+
+void RoutingTable :: setIface()
+{
+	for(int i=7;i<dataList.size()*8;i+=8)
+	{
+		Iface.append(strcat(data[i]," "));
+	}
+}
+string RoutingTable :: getIface()
+{
+	return Iface;
+}
+
+
+
+void RoutingTable :: displayRoutingTable()
 {
 	cout<<"-------------- Kernel Routing Table  ------------------"<<endl;
 	cout<<Destination<<endl;

@@ -10,7 +10,8 @@
 
 #define PORT 52341
 #define MAXBUFF 1024
-#define SIZE 1024
+#define SIZE 4096
+
 
 using namespace std;
 
