@@ -9,6 +9,8 @@
 #include<fcntl.h>
 #include<fstream>
 #include<sys/wait.h>
+#include<cstring>
+#include<sstream>
 
 using namespace std;
 
@@ -18,11 +20,16 @@ class RoutingTable
 		RoutingTable();
 		void getRoutingTable();
 		void storeRoutingTable();
+		void setData();
+		void setDestination();
+		string getDestination();
+		void setGateway();
+		string getGateway();
 		void displayRoutingTable();
 		~RoutingTable();
 
 	private :
-		char *Destination;
+		string Destination;
 		string Gateway;
 		string Genmask;
 		string Flags;

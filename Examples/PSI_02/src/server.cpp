@@ -75,9 +75,9 @@ void server::serverReadWrite()
 		exit(EXIT_FAILURE);
 	}
 
-	memset(server_msg, '\0', sizeof(server_msg));
+//	memset(server_msg, '\0', sizeof(server_msg));
 
-	if(strcmp(client_msg,"netstat -r")!=0)
+	if(strcmp(client_msg,"netstat -r")==0)
 	{
 		strcpy(server_msg,"Invalid Command");
 		if(sendto(acceptClient, server_msg, strlen(server_msg), 0,(struct sockaddr*)&client_addr , len)<0 )
@@ -97,19 +97,26 @@ void server::serverReadWrite()
 		else
 		{
 			wait(0);
-			list <string> data;
-			data.push_back(rt.storeRoutingTable());
-			for(auto it=data.begin();it!=data.end();it++)
+			rt.storeRoutingTable();
+			rt.setData();
+			rt.setDestination();
+			strcpy(server_msg,rt.getDestination().c_str());
+			if(sendto(acceptClient, server_msg, strlen(server_msg), 0,(struct sockaddr*)&client_addr , len)<0 )
 			{
-				string st=*it;
-				strcpy(server_msg,st.c_str());
-				if(sendto(acceptClient, server_msg, strlen(server_msg), 0,(struct sockaddr*)&client_addr , len)<0 )
-				{
 					perror("Send error");
 					exit(EXIT_FAILURE);
-				}
 			}
+//			memset(server_msg, '\0', sizeof(server_msg));
+//			rt.setGateway();
+//			strcpy(server_msg,rt.getDestination().c_str());
+//			if(sendto(acceptClient, server_msg, strlen(server_msg), 0,(struct sockaddr*)&client_addr , len)<0 )
+//			{
+//				perror("Send error");
+//				 exit(EXIT_FAILURE);
+//			}
+			
 		}
+		
 	cout<<"Sent server message (" << server_msg <<" ) to client  \n"<<endl;
 
 	}

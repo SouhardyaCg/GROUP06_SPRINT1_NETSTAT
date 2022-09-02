@@ -65,12 +65,23 @@ void RoutingTable :: setDestination()
 {
 	for(int i=0;i<dataList.size()*8;i+=8)
 	{
-		strcpy(Destination[i],data[i];
+		Destination.append(strcat(data[i],"  "));
 	}
 }
-void RoutingTable :: getDestination()
+string RoutingTable :: getDestination()
 {
-	return Destination[];
+	return Destination;
+}
+void RoutingTable :: setGateway()
+{
+	for(int i=1;i<dataList.size()*8;i+=8)
+	{
+		Gateway.append(strcat(data[i],"  "));
+	}
+}
+string RoutingTable :: getGateway()
+{
+	return Gateway;
 }
 void RoutingTable::displayRoutingTable()
 {

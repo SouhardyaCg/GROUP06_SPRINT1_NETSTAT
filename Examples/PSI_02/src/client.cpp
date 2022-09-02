@@ -53,12 +53,15 @@ void client::clientReadWrite()
 	}
 	cout<<"Send  ( "<<client_msg<<" ) to the server "<<endl;
 	sleep(1);
+	
 	if(recvfrom(socket_cfd, server_msg, sizeof(server_msg),0,(struct sockaddr*)&client_addr,(socklen_t*)&len)<0)
 	{
 		perror("Recv error");
 		exit(EXIT_FAILURE);
 	}
 	cout <<"Recived from Server : "<<server_msg<<endl;
+	memset(&server_addr,'\0',sizeof(server_addr));
+	
 	close(socket_cfd);
 	shutdown(socket_cfd,SHUT_RDWR);
 }
