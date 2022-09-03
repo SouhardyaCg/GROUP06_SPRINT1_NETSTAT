@@ -15,11 +15,10 @@
 #include<sstream>
 
 using namespace std;
-
-class netstatFIREFOX
+class listen
 {
-	public :
-		netstatFIREFOX();    
+	public:
+		listen();
 		void setProto(char [][20]);
 		string getProto();
 		void setRecv(char [][20]);
@@ -32,21 +31,29 @@ class netstatFIREFOX
 		string getForeign_Address();
 		void setState(char [][20]);
 		string getState();
+<<<<<<< HEAD:Examples/netstat_FIREFOX/inc/firefox.h
 		void setApplication(char [][20]);
 		string getApplication();
 		void displayFIREFOX_Table();
 		~netstatFIREFOX();
+=======
+		void setOthers(char [][20]);
+		string getOthers();
+		void displayListen();
 
-	private :
+		~listen();
+>>>>>>> f6eb3b1de9a873570cde564edfa3f2a563808e30:Examples/netstat_LISTEN/inc/listen.h
+
+	private:
 		string Proto;
 		string Recv;
 		string Send;
 		string Local_Address;
 		string Foreign_Address;
 		string State;
-		string Application;
-
+		string Others;
 };
+void getListen();
+void storeListen(list<string> &);
 
-void getFIREFOX_Table();
-void storeFIREFOX_Table(list<string> &);
+
