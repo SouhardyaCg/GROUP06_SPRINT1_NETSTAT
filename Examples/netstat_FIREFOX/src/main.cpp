@@ -39,7 +39,7 @@ int main()
 			obj[i].setLocal_Address(data);
 			obj[i].setForeign_Address(data);
 			obj[i].setState(data);
-			obj{i}.setApplication(data);
+			obj[i].setApplication(data);
 
 			i++;
 		}

@@ -35,7 +35,7 @@ class netstatFIREFOX
 		void setApplication(char [][20]);
 		string getApplication();
 		void displayFIREFOX_Table();
-		~netstatTCP();
+		~netstatFIREFOX();
 
 	private :
 		string Proto;

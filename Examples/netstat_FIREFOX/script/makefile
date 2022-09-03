@@ -11,7 +11,7 @@ SRC = src
 
 all: firefox
 
-tcp: $(OBJ)/main.o $(OBJ)/firefox.o
+firefox: $(OBJ)/main.o $(OBJ)/firefox.o
 	$(CC) $(LDFLAGS) $(BIN)/firefox $(OBJ)/main.o $(OBJ)/firefox.o
 
 $(OBJ)/main.o: $(SRC)/main.cpp
