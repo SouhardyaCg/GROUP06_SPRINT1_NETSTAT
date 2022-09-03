@@ -1,0 +1,6 @@
+Kernel Interface table
+Iface      MTU    RX-OK RX-ERR RX-DRP RX-OVR    TX-OK TX-ERR TX-DRP TX-OVR Flg
+lo        1500        0      0      0 0             0      0      0      0 LRU
+wifi0     1500        0      0      0 0             0      0      0      0 BMRU
+wifi1     1500        0      0      0 0             0      0      0      0 R
+wifi2     1500        0      0      0 0             0      0      0      0 R
