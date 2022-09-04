@@ -30,7 +30,7 @@ int main()
 	close(file);
 	
 		char* cmd="netstat";
-		char *args[]={"netstat","-r",NULL};
+		char *args[]={"netstat","-tanp",NULL};
 		int status=execvp(cmd,args);
 		exit(EXIT_SUCCESS);
 	}
@@ -45,7 +45,7 @@ int main()
 		while(getline(fs,line))
 		{
 			count++;
-			if(count>2)
+			if(count>4)
 				myList.push_back(line);
 			else
 				continue;
@@ -53,7 +53,7 @@ int main()
 		cout<<"In list"<<endl;
 		for(auto it=myList.begin();it!=myList.end();it++)
 		{
-			cout<<*it<<endl;
+		//	cout<<*it<<endl;
 		}
 		int i=0;
 		for(auto it=myList.begin();it!=myList.end();it++)
@@ -61,20 +61,22 @@ int main()
 			string str=*it;
 			stringstream st(str);
 			string temp;
-														                while(st)											        {
-																	st>>temp;
+			while(st)											       
+		       	{
+				st>>temp;
 				if(st)
 			 	{
-					strcpy(data[i],temp.c_str());
+	//				strcpy(data[i],temp.c_str());
 					i++;
 				}
+			}
 				
-																}
+																
 		 }		
 		
 		for(int i=2;i<myList.size()*8;i+=8)
 		{
-			cout<<data[i]<<endl;
+	//		cout<<data[i]<<endl;
 		}
 		cout<<"The End"<<endl;
 	}

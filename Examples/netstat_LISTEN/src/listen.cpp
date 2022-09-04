@@ -5,7 +5,7 @@ void getListen()
 	dup2(file,STDOUT_FILENO);
 	close(file);
 	char* cmd="netstat";
-	char *args[]={"netstat","-tanp | grep -i LISTEN",NULL};
+	char *args[]={"netstat","-tanp|grep -i firefox",NULL};
 	execvp(cmd,args);
 	exit(EXIT_SUCCESS);
 }
