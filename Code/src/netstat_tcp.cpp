@@ -1,22 +1,25 @@
-#include<tcp.h>
+#include<netstat_tcp.h>
 
 void getTCP_Table()
 {
+	if(fork()==0)
+	{
 	
-		int file=open("TcpFile.txt",O_WRONLY | O_CREAT ,0777);
+		int file=open("tcpFile.txt",O_WRONLY | O_CREAT ,0777);
 		dup2(file,STDOUT_FILENO);
 		close(file);
 		char* cmd="netstat";
 		char *args[]={"netstat","-tan",NULL};	
 		execvp(cmd,args);
 		exit(EXIT_SUCCESS);
+	}
 	
 }
 
 void storeTCP_Table(list<string> &dataList)
 {
 	fstream fs;
-	fs.open("TcpFile.txt",ios::in|ios::out);
+	fs.open("tcpFile.txt",ios::in|ios::out);
 	if(!fs)
 	{
 		cout<<"No such File"<<endl;
@@ -35,7 +38,45 @@ void storeTCP_Table(list<string> &dataList)
 		}
 	}
 	fs.close();
+}
+netstatTCP* TCPdriver()
+{
+	list<string> myData;
+	char data[6][20];
 
+		getTCP_Table();
+		storeTCP_Table(myData);
+	
+		int size=myData.size();
+		int i=0;
+		netstatTCP* tcp=new netstatTCP[size];
+
+		for(auto it=myData.begin();it!=myData.end();it++)
+		{
+			string str=*it;
+			stringstream st(str);
+			string temp;
+			int j=0;
+			while(st)
+			{
+				st>>temp;
+				if(st)
+				{
+					strcpy(data[j],temp.c_str());
+					j++;
+				}
+			}
+			tcp[i].setProto(data);
+			tcp[i].setRecv(data);
+			tcp[i].setSend(data);
+			tcp[i].setLocal_Address(data);
+			tcp[i].setForeign_Address(data);
+			tcp[i].setState(data);
+
+			i++;
+		}
+
+		return tcp;
 }
 
 netstatTCP :: netstatTCP()
@@ -92,14 +133,20 @@ string netstatTCP :: getState()
 
 void netstatTCP :: displayTCP_Table()
 {
-	cout<<"-------------- Kernel TCP Table  ------------------"<<endl;
-	cout<<"Proto : "<<Proto<<endl;
-	cout<<"Recv-Q :"<<Recv<<endl;
-	cout<<"Send-Q :"<<Send<<endl;
-	cout<<"Local Address :"<<Local_Address<<endl;
-	cout<<"Foreign Address :"<<Foreign_Address<<endl;
-	cout<<"State :"<<State<<endl;
-	cout<<"---------------The End --------------------------"<<endl;
+	netstatTCP *tcp;
+	tcp = TCPdriver();
+
+	for(int i=0;i<3;i++)
+	{
+		cout<<"-------------- Kernel TCP Table Dataset "<<i+1<<" ------------------"<<endl;
+		cout<<"Proto : "<<tcp[i].Proto<<endl;
+		cout<<"Recv-Q :"<<tcp[i].Recv<<endl;
+		cout<<"Send-Q :"<<tcp[i].Send<<endl;
+		cout<<"Local Address :"<<tcp[i].Local_Address<<endl;
+		cout<<"Foreign Address :"<<tcp[i].Foreign_Address<<endl;
+		cout<<"State :"<<tcp[i].State<<endl;
+		cout<<"---------------The End --------------------------"<<endl;
+	}
 
 }
 

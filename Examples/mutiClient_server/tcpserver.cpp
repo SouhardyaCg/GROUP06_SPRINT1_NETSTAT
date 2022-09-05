@@ -58,7 +58,7 @@ int main(){
 		cout<<"Connection accepted from"<<inet_ntoa(newAddr.sin_addr)<<ntohs(newAddr.sin_port)<<endl;
 
 		if((childpid = fork()) == 0){
-			close(sockfd);
+				close(sockfd);
 
 			
 				recv(newSocket, buffer, 1024, 0);

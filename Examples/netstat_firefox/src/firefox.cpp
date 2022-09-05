@@ -3,14 +3,47 @@
 void getFIREFOX_Table()
 {
 	
-		int file=open("myFile.txt",O_WRONLY | O_CREAT ,0777);
-		dup2(file,STDOUT_FILENO);
-		close(file);
+	int fd[2];
+	if(pipe(fd) == -1)
+	{
+		return perror("pipe");
+	}
+	int pid1=fork();
+	if(pid1==0)
+	{
+		dup2(fd[1],STDOUT_FILENO);
+
+		close(fd[0]);
+		close(fd[1]);
+
 		char* cmd="netstat";
-		char *args[]={"netstat","-tanp | grep -i firefox",NULL};	
+		char *args[]={"netstat","-tanp",NULL};
 		execvp(cmd,args);
 		exit(EXIT_SUCCESS);
-	
+	}
+	int pid2=fork();
+	if(pid2==0)
+	{
+		dup2(fd[0],STDIN_FILENO);
+		close(fd[0]);
+		close(fd[1]);
+
+		int file=open("myFile.txt",O_WRONLY | O_CREAT ,0777);
+        dup2(file,STDOUT_FILENO);
+        close(file);
+
+
+		char *cmd="grep";
+		char *args[]={"grep","-i","firefox",NULL};
+		execvp(cmd,args);
+		exit(EXIT_SUCCESS);
+	}
+		
+		close(fd[0]);
+		close(fd[1]);
+		
+		waitpid(pid1,NULL,0);
+        waitpid(pid2,NULL,0);
 }
 
 void storeFIREFOX_Table(list<string> &dataList)
@@ -23,15 +56,12 @@ void storeFIREFOX_Table(list<string> &dataList)
 	}
 	else
 	{
-		int count =0;
 		string line;
 		while(getline(fs,line))
 		{
-			count++;
-			if(count>2)
+		
 				dataList.push_back(line);
-			else
-				continue;
+			
 		}
 	}
 	fs.close();
@@ -85,7 +115,6 @@ void netstatFIREFOX :: setState(char data[][20])
 {
 	State=data[5];
 }
-
 string netstatFIREFOX :: getState()
 {
 	return State;
@@ -109,7 +138,6 @@ void netstatFIREFOX :: displayFIREFOX_Table()
 	cout<<"State :"<<State<<endl;
 	cout<<"Application :"<<Application<<endl;
 	cout<<"---------------The End --------------------------"<<endl;
-	
 }
 
 netstatFIREFOX::~netstatFIREFOX()

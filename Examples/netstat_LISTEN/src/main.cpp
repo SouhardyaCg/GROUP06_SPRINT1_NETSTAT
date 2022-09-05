@@ -1,16 +1,16 @@
-#include<firefox.h>
+#include<listen.h>
 
 int main()
 {
 	list<string> myData;
 	char data[7][20];
 	
-		getFIREFOX_Table();
-		storeFIREFOX_Table(myData);
+		getListen();
+		storeListen(myData);
 	
 		int size=myData.size();
 		int i=0;
-		netstatFIREFOX obj[size];
+		listen obj[size];
 
 		for(auto it=myData.begin();it!=myData.end();it++)
 		{
@@ -27,14 +27,13 @@ int main()
 					j++;
 				}
 			}
-			
 			obj[i].setProto(data);
 			obj[i].setRecv(data);
 			obj[i].setSend(data);
 			obj[i].setLocal_Address(data);
 			obj[i].setForeign_Address(data);
 			obj[i].setState(data);
-			obj[i].setApplication(data);
+			obj[i].setOthers(data);
 
 			i++;
 		}
@@ -43,7 +42,6 @@ int main()
 		for(int i=0;i<size;i++)
 		{
 			cout<<"Output for OBJECT "<<i<<endl;
-			obj[i].displayFIREFOX_Table();
+			obj[i].displayListen();
 		}
-	
 }
