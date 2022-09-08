@@ -16,6 +16,8 @@
 
 using namespace std;
 
+static fstream log("logFile.txt",ios::in|ios::out);
+
 class netstatTCP
 {
 	public :

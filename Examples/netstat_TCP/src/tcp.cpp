@@ -36,6 +36,8 @@ void storeTCP_Table(list<string> &dataList)
 	}
 	fs.close();
 
+	log<<"Store Table Done"<<endl;
+
 }
 
 netstatTCP :: netstatTCP()

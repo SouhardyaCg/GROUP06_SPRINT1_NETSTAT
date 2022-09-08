@@ -1,0 +1,190 @@
+        -:    0:Source:server.cpp
+        -:    1:#include"server.h"
+        -:    2:#include"netstat_r.h"
+        -:    3:#include"netstat_tcp.h"
+        -:    4:#include"netstat_udp.h"
+        -:    5:#include"netstat_listen.h"
+        -:    6:#include"netstat_firefox.h"
+        -:    7:
+    #####:    8:Server :: Server()
+        -:    9:{
+        -:   10:
+    #####:   11:}
+    #####:   12:void Server :: createSock() //creation of socket
+        -:   13:{
+        -:   14:
+    #####:   15:	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    #####:   16:	if(sockfd < 0)
+        -:   17:	{
+    #####:   18:		sl<<"FATAL:Socket not created"<<endl;
+    #####:   19:		exit(EXIT_FAILURE);
+        -:   20:	}
+    #####:   21:	cout<<"Server Running...."<<endl;
+    #####:   22:	sl<<"INFO :Server Socket is created successfully" <<endl;
+    #####:   23:}
+        -:   24:
+    #####:   25:void Server :: bindClient() //func to bind with the client
+        -:   26:{
+    #####:   27:	memset(&server_addr, '\0', sizeof(server_addr));
+        -:   28:
+    #####:   29:	server_addr.sin_family = AF_INET;
+    #####:   30:	server_addr.sin_port = htons(PORT);
+    #####:   31:	server_addr.sin_addr.s_addr = inet_addr(ADDR);
+        -:   32:
+    #####:   33:	sl<<"DEBUG : Connected to Address"<<ADDR<<"and Port "<<PORT<<endl;
+        -:   34:
+    #####:   35:	int ret =bind(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr));
+    #####:   36:	if(ret < 0)
+        -:   37:	{
+    #####:   38:		sl<<"ERROR : Error in binding."<<endl;
+    #####:   39:		exit(EXIT_FAILURE);
+        -:   40:	}
+    #####:   41:	sl<<"INFO : Binded to port :"<<PORT<<endl;
+    #####:   42:}
+        -:   43:
+    #####:   44:void Server :: listenClient()  //listening to the client
+        -:   45:{
+    #####:   46:	if(listen(sockfd, 5) == 0)
+        -:   47:	{
+    #####:   48:		sl<<"INFO : Listening to clients "<<endl;
+        -:   49:	}
+        -:   50:	else
+        -:   51:	{
+    #####:   52:		sl<<"ERROR : Error in Listening"<<endl;
+        -:   53:	}
+        -:   54:
+    #####:   55:}
+        -:   56:
+    #####:   57:void Server :: send_recv()
+        -:   58:{
+        -:   59:	while(1)
+        -:   60:	{	
+        -:   61:		//accpting the client and establishing connection.
+    #####:   62:		newsockfd = accept(sockfd, (struct sockaddr*)&client_addr,(socklen_t*)&client_addr_len);
+    #####:   63:		if(newsockfd < 0)
+        -:   64:		{
+    #####:   65:			sl<<"ERROR :Could not Connect"<<endl;
+    #####:   66:			exit(EXIT_FAILURE);
+        -:   67:		}
+    #####:   68:		sl<<"INFO : Connected successfully"<<endl;
+    #####:   69:		sl<<"Connection accepted."<<endl;
+        -:   70:
+    #####:   71:		if(fork() == 0)  //Child process for accepting multiclients.
+        -:   72:		{
+    #####:   73:				close(sockfd);
+        -:   74:				char buffer[30]; //buffer to receive client data;
+        -:   75:
+    #####:   76:				if(recv(newsockfd,buffer,sizeof(buffer),0)<0)
+        -:   77:				{
+    #####:   78:					sl<<"ERROR :recv() error"<<endl;
+    #####:   79:					exit(EXIT_FAILURE);
+        -:   80:				}
+        -:   81:				else
+        -:   82:				{
+    #####:   83:					sl<<"INFO : Received Data Successfully"<<endl;
+        -:   84:				}
+        -:   85:
+    #####:   86:				if(strcmp(buffer,"RT")==0)  //Comparing client data with the commands
+        -:   87:				{
+    #####:   88:					cout<<"Client:"<<buffer<<endl;
+    #####:   89:					string data=storeRoutingTable(); //storing the appended rawData in string
+        -:   90:
+        -:   91:					char buffData[SIZE];
+    #####:   92:					strcpy(buffData,data.c_str()); //copying to a buffer.
+    #####:   93:					if(send(newsockfd, buffData, sizeof(buffData),0)<0)
+        -:   94:					{
+    #####:   95:						sl<<"ERROR: RT send() error"<<endl;
+    #####:   96:						exit(EXIT_FAILURE);
+        -:   97:					}
+        -:   98:					else
+        -:   99:					{
+    #####:  100:						sl<<"INFO : RT output sent"<<endl;
+        -:  101:					}
+    #####:  102:				}
+    #####:  103:				else if(strcmp(buffer,"TCP")==0) //storing the appended rawData in string
+        -:  104:				{
+    #####:  105:					cout<<"Client:"<<buffer<<endl;
+    #####:  106:					string data=storeTCP_Table();
+        -:  107:
+        -:  108:					char buffData[SIZE];
+    #####:  109:					strcpy(buffData,data.c_str()); //copyning to a buffer
+    #####:  110:					if(send(newsockfd, buffData, sizeof(buffData), 0)<0)
+        -:  111:					{
+    #####:  112:						sl<<"ERROR: TCP send() error"<<endl;
+    #####:  113:						exit(EXIT_FAILURE);
+        -:  114:					}
+        -:  115:					else
+        -:  116:					{
+    #####:  117:						sl<<"INFO : TCP output sent"<<endl;
+        -:  118:					}
+    #####:  119:				}
+    #####:  120:				else if(strcmp(buffer,"UDP")==0)
+        -:  121:				{
+    #####:  122:					cout<<"Client:"<<buffer<<endl;
+    #####:  123:					string data=storeUDP_Table(); //storing appended rawData in a string
+        -:  124:
+        -:  125:					char buffData[SIZE];
+    #####:  126:					strcpy(buffData,data.c_str()); //copyning to a buffer
+    #####:  127:					if(send(newsockfd, buffData, sizeof(buffData), 0)<0)
+        -:  128:					{
+    #####:  129:						sl<<"ERROR: UDP send() error"<<endl;
+    #####:  130:						exit(EXIT_FAILURE);
+        -:  131:					}
+        -:  132:					else
+        -:  133:					{
+    #####:  134:						sl<<"INFO : UDP output sent"<<endl;
+        -:  135:					}
+        -:  136:					
+    #####:  137:				}
+    #####:  138:				else if(strcmp(buffer,"Listen")==0)
+        -:  139:				{
+    #####:  140:					cout<<"Client:"<<buffer<<endl;
+    #####:  141:					string data=storeListen(); //storing rawData in string
+        -:  142:
+        -:  143:					char buffData[SIZE]; //copying to a buffer
+    #####:  144:					strcpy(buffData,data.c_str());
+    #####:  145:					if(send(newsockfd, buffData, sizeof(buffData), 0)<0)
+        -:  146:					{
+    #####:  147:						sl<<"ERROR: Listen send() error"<<endl;
+    #####:  148:						exit(EXIT_FAILURE);
+        -:  149:					}
+        -:  150:					else
+        -:  151:					{
+    #####:  152:						sl<<"INFO : Listen output sent"<<endl;
+        -:  153:					}
+        -:  154:
+        -:  155:
+    #####:  156:				}
+    #####:  157:				else if (strcmp(buffer,"Firefox")==0)
+        -:  158:				{
+    #####:  159:					cout<<"Client:"<<buffer<<endl;
+    #####:  160:					string data=storeFIREFOX_Table(); //storing rawData in a string
+        -:  161:					char buffData[1000000];
+    #####:  162:					strcpy(buffData,data.c_str()); //copying to a buffer.
+    #####:  163:					if(send(newsockfd, buffData, sizeof(buffData),0)<0)
+        -:  164:					{
+    #####:  165:						sl<<"ERROR: firefox send() error"<<endl;
+    #####:  166:						exit(EXIT_FAILURE);
+        -:  167:					}
+        -:  168:					else
+        -:  169:					{
+    #####:  170:						sl<<"INFO : firefox output sent"<<endl;
+        -:  171:					}
+        -:  172:					
+    #####:  173:				}
+        -:  174:			
+        -:  175:		}
+        -:  176:
+    #####:  177:	}
+        -:  178:
+        -:  179:}
+        -:  180:
+    #####:  181:void Server :: closeSock()
+        -:  182:{
+    #####:  183:	close(newsockfd);
+    #####:  184:}
+        -:  185:
+    #####:  186:Server :: ~Server()
+        -:  187:{
+        -:  188:
+    #####:  189:}

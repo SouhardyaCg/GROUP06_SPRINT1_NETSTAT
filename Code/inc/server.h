@@ -10,6 +10,7 @@
 
 #define PORT 4444
 #define ADDR "127.0.0.1"
+#define SIZE 4096
 using namespace std;
 
 class Server

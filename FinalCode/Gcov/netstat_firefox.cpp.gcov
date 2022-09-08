@@ -1,0 +1,212 @@
+        -:    0:Source:netstat_firefox.cpp
+        -:    1:#include<netstat_firefox.h>
+        -:    2:#include <client.h>
+        -:    3:#include <server.h>
+        -:    4:
+    #####:    5:void getFIREFOX_Table() //piping two process to perform pipe operation and capture the output of the command
+        -:    6:{
+        -:    7:	
+        -:    8:	int fd[2];
+    #####:    9:	if(pipe(fd) == -1)
+        -:   10:	{
+    #####:   11:		return perror("pipe");
+        -:   12:	}
+    #####:   13:	int pid1=fork();
+    #####:   14:	if(pid1==0)
+        -:   15:	{
+    #####:   16:		dup2(fd[1],STDOUT_FILENO);
+        -:   17:
+    #####:   18:		close(fd[0]);
+    #####:   19:		close(fd[1]);
+        -:   20:
+    #####:   21:		char* cmd="netstat";
+    #####:   22:		char *args[]={"netstat","-tanp",NULL};
+    #####:   23:		cl<<"WARNING : String to Const char*"<<endl;
+    #####:   24:		execvp(cmd,args);
+    #####:   25:		exit(EXIT_SUCCESS);
+        -:   26:	}
+    #####:   27:	int pid2=fork();
+    #####:   28:	if(pid2==0)
+        -:   29:	{
+    #####:   30:		dup2(fd[0],STDIN_FILENO);
+    #####:   31:		close(fd[0]);
+    #####:   32:		close(fd[1]);
+        -:   33:
+    #####:   34:		int file=open("firefoxFile.txt",O_WRONLY | O_CREAT ,0777);
+    #####:   35:        dup2(file,STDOUT_FILENO);
+    #####:   36:        close(file);
+        -:   37:
+        -:   38:
+    #####:   39:		char *cmd="grep";
+    #####:   40:		char *args[]={"grep","-i","firefox",NULL};
+    #####:   41:		execvp(cmd,args);
+    #####:   42:		exit(EXIT_SUCCESS);
+        -:   43:	}
+        -:   44:		
+    #####:   45:		close(fd[0]);
+    #####:   46:		close(fd[1]);
+        -:   47:		
+    #####:   48:		waitpid(pid1,NULL,0);
+    #####:   49:        waitpid(pid2,NULL,0);
+    #####:   50:        sl<<"WARNING : String to Const char*"<<endl;	
+    #####:   51:		sl<<"INFO : firefox File Created"<<endl;
+        -:   52:}
+        -:   53:
+    #####:   54:string storeFIREFOX_Table() //read each records from file and return a appended string seperated by |
+        -:   55:{
+    #####:   56:	sl<<"INFO :In StoreFIREFOX_Table"<<endl;
+    #####:   57:	getFIREFOX_Table();
+    #####:   58:	fstream fs;
+    #####:   59:	string totalData;
+    #####:   60:	fs.open("firefoxFile.txt",ios::in|ios::out);
+    #####:   61:	if(!fs)
+        -:   62:	{
+    #####:   63:		cout<<"No such File"<<endl;
+        -:   64:	}
+        -:   65:	else
+        -:   66:	{
+    #####:   67:		string line;
+    #####:   68:		while(getline(fs,line)) //reading each line and appending 
+        -:   69:		{
+        -:   70:		
+    #####:   71:				totalData+=line+"|";
+        -:   72:			
+        -:   73:		}
+    #####:   74:	}
+    #####:   75:	fs.close();
+    #####:   76:	sl<<"INFO :Ended StoreFIREFOX_Table"<<endl;
+    #####:   77:	return totalData;
+    #####:   78:}
+        -:   79:
+    #####:   80:void firefoxdriver(string firefoxData)  //main driver function responsible for execution
+        -:   81:{
+    #####:   82:	cl<<"INFO : In firefoxDriver "<<endl;
+    #####:   83:	list<string> myData;
+        -:   84:	char data[7][20];
+        -:   85:	
+    #####:   86:		string record;
+    #####:   87:		stringstream str(firefoxData);
+    #####:   88:		while(getline(str,record,'|'))		//parsing the appended data and store it in STL
+        -:   89:		{
+    #####:   90:			myData.push_back(record);
+        -:   91:		}
+        -:   92:	
+    #####:   93:		int size=myData.size();
+    #####:   94:		int i=0;
+        -:   95:
+    #####:   96:		netstatFIREFOX nf[size];
+        -:   97:
+    #####:   98:		for(auto it=myData.begin();it!=myData.end();it++)
+        -:   99:		{
+    #####:  100:			string str=*it;
+    #####:  101:			stringstream st(str);
+    #####:  102:			string temp;
+    #####:  103:			int j=0;
+    #####:  104:			while(st)
+        -:  105:			{
+    #####:  106:				st>>temp;
+    #####:  107:				if(st)
+        -:  108:				{
+    #####:  109:					strcpy(data[j],temp.c_str());	//parsing again to store in specific attributes
+    #####:  110:					j++;
+        -:  111:				}
+        -:  112:			}
+        -:  113:			
+    #####:  114:			nf[i].setProto(data);
+    #####:  115:			nf[i].setRecv(data);
+    #####:  116:			nf[i].setSend(data);
+    #####:  117:			nf[i].setLocal_Address(data);
+    #####:  118:			nf[i].setForeign_Address(data);
+    #####:  119:			nf[i].setState(data);
+    #####:  120:			nf[i].setApplication(data);
+        -:  121:
+    #####:  122:			i++;
+    #####:  123:		}
+        -:  124:
+    #####:  125:		if(size==0)
+        -:  126:		{
+    #####:  127:			sl<<"WARNING : No such Application Running"<<endl;
+    #####:  128:			cout<<"No such Application Running"<<endl; //Check for Firefox Application running or not.
+    #####:  129:			exit(EXIT_SUCCESS);
+        -:  130:
+        -:  131:
+        -:  132:		}
+        -:  133:		else
+        -:  134:		{
+    #####:  135:			for(int i=0;i<size;i++)
+        -:  136:			{
+    #####:  137:				cout<<"-------------- Kernel TCP Table with Firefox application dataset "<<i+1<<" ------------------"<<endl;
+    #####:  138:				cout<<"\tProto :"<<nf[i].getProto()<<endl;
+    #####:  139:				cout<<"\tRecv-Q :"<<nf[i].getRecv()<<endl;
+    #####:  140:				cout<<"\tSend-Q :"<<nf[i].getSend()<<endl;
+    #####:  141:				cout<<"\tLocal Address :"<<nf[i].getLocal_Address()<<endl;
+    #####:  142:				cout<<"\tForeign Address :"<<nf[i].getForeign_Address()<<endl;
+    #####:  143:				cout<<"\tState :"<<nf[i].getState()<<endl;
+    #####:  144:				cout<<"\tApplication :"<<nf[i].getApplication()<<endl;
+    #####:  145:				cout<<"--------------------------------------------------------------------------------------------- "<<endl;
+        -:  146:			}
+        -:  147:		}
+    #####:  148:		cl<<"INFO : Ended firefoxDriver "<<endl;		
+    #####:  149:}
+        -:  150:
+    #####:  151:netstatFIREFOX :: netstatFIREFOX()
+    #####:  152:{}
+        -:  153:
+    #####:  154:void netstatFIREFOX :: setProto(char data[][20])
+        -:  155:{
+    #####:  156:	Proto=data[0];	
+    #####:  157:}
+    #####:  158:string netstatFIREFOX :: getProto()
+        -:  159:{
+    #####:  160:	return Proto;
+        -:  161:}
+    #####:  162:void netstatFIREFOX :: setRecv(char data[][20])
+        -:  163:{
+    #####:  164:	Recv=data[1];
+    #####:  165:}
+    #####:  166:string netstatFIREFOX :: getRecv()
+        -:  167:{
+    #####:  168:	return Recv;
+        -:  169:}
+    #####:  170:void netstatFIREFOX :: setSend(char data[][20])
+        -:  171:{
+    #####:  172:	Send=data[2];
+    #####:  173:}
+    #####:  174:string netstatFIREFOX :: getSend()
+        -:  175:{
+    #####:  176:	return Send;
+        -:  177:}
+    #####:  178:void netstatFIREFOX :: setLocal_Address(char data[][20])
+        -:  179:{
+    #####:  180:	Local_Address=data[3];
+    #####:  181:}
+    #####:  182:string netstatFIREFOX :: getLocal_Address()
+        -:  183:{
+    #####:  184:	return Local_Address;
+        -:  185:}
+    #####:  186:void netstatFIREFOX :: setForeign_Address(char data[][20])
+        -:  187:{
+    #####:  188:	Foreign_Address=data[4];
+    #####:  189:}
+    #####:  190:string netstatFIREFOX :: getForeign_Address()
+        -:  191:{
+    #####:  192:	return Foreign_Address;
+        -:  193:}
+    #####:  194:void netstatFIREFOX :: setState(char data[][20])
+        -:  195:{
+    #####:  196:	State=data[5];
+    #####:  197:}
+    #####:  198:string netstatFIREFOX :: getState()
+        -:  199:{
+    #####:  200:	return State;
+        -:  201:}
+    #####:  202:void netstatFIREFOX :: setApplication(char data[][20])
+        -:  203:{
+    #####:  204:	Application=data[6];
+    #####:  205:}
+    #####:  206:string netstatFIREFOX :: getApplication()
+        -:  207:{
+    #####:  208:	return Application;
+        -:  209:}
+    #####:  210:netstatFIREFOX::~netstatFIREFOX()
+    #####:  211:{}

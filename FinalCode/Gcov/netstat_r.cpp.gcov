@@ -1,0 +1,185 @@
+        -:    0:Source:netstat_r.cpp
+        -:    1:#include<netstat_r.h>
+        -:    2:#include <client.h>
+        -:    3:#include <server.h>
+        -:    4:
+    #####:    5:void getRoutingTable() //Capture the output of the commands in a file
+        -:    6:{
+    #####:    7:		if(fork()==0)
+        -:    8:		{
+    #####:    9:			int file=open("rtFile.txt",O_WRONLY | O_CREAT ,0777);
+    #####:   10:			dup2(file,STDOUT_FILENO); //redireting the output of STDOUT  to our file.
+    #####:   11:			close(file);
+    #####:   12:			char* cmd="netstat";
+    #####:   13:			char *args[]={"netstat","-r",NULL};	
+    #####:   14:			sl<<"WARNING : String to Const char*"<<endl;
+    #####:   15:			sl<<"INFO : RT file Created"<<endl;
+    #####:   16:			execvp(cmd,args);
+    #####:   17:			exit(EXIT_SUCCESS);
+        -:   18:		}
+    #####:   19:		wait(0);	
+    #####:   20:}
+        -:   21:
+    #####:   22:string storeRoutingTable() //read each records from file and return a appended string seperated by |
+        -:   23:{
+    #####:   24:	sl<<"INFO : In Store Routing Table"<<endl;
+    #####:   25:	getRoutingTable();
+    #####:   26:	fstream fs;
+    #####:   27:	string totalData;
+    #####:   28:	fs.open("rtFile.txt",ios::in|ios::out);
+    #####:   29:	if(!fs)
+        -:   30:	{
+    #####:   31:		sl<<"ERROR : No such File"<<endl;
+        -:   32:	}
+        -:   33:	else
+        -:   34:	{
+    #####:   35:		int count =0;
+    #####:   36:		string line;
+    #####:   37:		while(getline(fs,line))			//reading each line from the file and appending it
+        -:   38:		{
+    #####:   39:			count++;
+    #####:   40:			if(count>2)
+    #####:   41:				totalData+=line+"|";
+        -:   42:			else
+    #####:   43:				continue;
+        -:   44:		}
+    #####:   45:	}
+    #####:   46:	fs.close();
+    #####:   47:	sl<<"INFO : Ended Store Routing Table"<<endl;
+    #####:   48:	return totalData;
+        -:   49:
+    #####:   50:}
+        -:   51:
+    #####:   52:void RTdriver(string totalData)  //main driver function responsible for execution
+        -:   53:{
+        -:   54:
+    #####:   55:	cl<<"INFO : In RTdriver"<<endl;
+        -:   56:	char data[8][20];
+    #####:   57:	list<string> myData;
+        -:   58:
+    #####:   59:	string record;
+    #####:   60:	stringstream str(totalData);
+    #####:   61:	while(getline(str,record,'|'))		//breaking the rawData to store in an STL
+        -:   62:	{
+    #####:   63:		myData.push_back(record);
+        -:   64:	}
+        -:   65:	
+    #####:   66:	int size=myData.size();
+    #####:   67:	int i=0;
+    #####:   68:	RoutingTable rt[size];
+        -:   69:
+    #####:   70:	for(auto it=myData.begin();it!=myData.end();it++)
+        -:   71:	{
+    #####:   72:			string str=*it;
+    #####:   73:			stringstream st(str);
+    #####:   74:			string temp;
+    #####:   75:			int j=0;
+    #####:   76:			while(st)
+        -:   77:			{
+    #####:   78:				st>>temp;
+    #####:   79:				if(st)
+        -:   80:				{
+    #####:   81:					strcpy(data[j],temp.c_str()); //parse again to store values into different attributes
+    #####:   82:					j++;
+        -:   83:				}
+        -:   84:			}
+    #####:   85:			rt[i].setDestination(data);
+    #####:   86:			rt[i].setGateway(data);
+    #####:   87:			rt[i].setGenmask(data);
+    #####:   88:			rt[i].setFlags(data);
+    #####:   89:			rt[i].setMss(data);
+    #####:   90:			rt[i].setWindow(data);
+    #####:   91:			rt[i].setirtt(data);
+    #####:   92:			rt[i].setIface(data);
+        -:   93:
+    #####:   94:			i++;
+    #####:   95:	}
+        -:   96:	
+    #####:   97:	for(int i=0;i<size;i++) //displaying respect to objects
+        -:   98:	{
+    #####:   99:		cout<<"-------------- Kernel Routing Table DataSet "<<i+1<<"------------------"<<endl;
+    #####:  100:		cout<<"\tDESTINATION :"<<rt[i].getDestination()<<endl;
+    #####:  101:		cout<<"\tGATEWAY :"<<rt[i].getGateway()<<endl;
+    #####:  102:		cout<<"\tGENMASK :"<<rt[i].getGenmask()<<endl;
+    #####:  103:		cout<<"\tFLAGS :"<<rt[i].getFlags()<<endl;
+    #####:  104:		cout<<"\tMSS :"<<rt[i].getMss()<<endl;
+    #####:  105:		cout<<"\tWINDOW :"<<rt[i].getWindow()<<endl;
+    #####:  106:		cout<<"\tIRTT :"<<rt[i].getirtt()<<endl;
+    #####:  107:		cout<<"\tIFACE :"<<rt[i].getIface()<<endl;
+    #####:  108:		cout<<"----------------------------------------------"<<endl;
+        -:  109:	}
+        -:  110:
+    #####:  111:	cl<<"INFO : Finished Executions"<<endl;
+        -:  112:
+    #####:  113:}
+        -:  114:
+    #####:  115:RoutingTable :: RoutingTable()
+    #####:  116:{}
+        -:  117:
+    #####:  118:void RoutingTable :: setDestination(char data[][20])
+        -:  119:{
+    #####:  120:	Destination=data[0];	
+    #####:  121:}
+    #####:  122:string RoutingTable :: getDestination()
+        -:  123:{
+    #####:  124:	return Destination;
+        -:  125:}
+    #####:  126:void RoutingTable :: setGateway(char data[][20])
+        -:  127:{
+    #####:  128:	Gateway=data[1];
+    #####:  129:}
+    #####:  130:string RoutingTable :: getGateway()
+        -:  131:{
+    #####:  132:	return Gateway;
+        -:  133:}
+    #####:  134:void RoutingTable :: setGenmask(char data[][20])
+        -:  135:{
+    #####:  136:	Genmask=data[2];
+    #####:  137:}
+    #####:  138:string RoutingTable :: getGenmask()
+        -:  139:{
+    #####:  140:	return Genmask;
+        -:  141:}
+    #####:  142:void RoutingTable :: setFlags(char data[][20])
+        -:  143:{
+    #####:  144:	Flags=data[3];
+    #####:  145:}
+    #####:  146:string RoutingTable :: getFlags()
+        -:  147:{
+    #####:  148:	return Flags;
+        -:  149:}
+    #####:  150:void RoutingTable :: setMss(char data[][20])
+        -:  151:{
+    #####:  152:	Mss=data[4];
+    #####:  153:}
+    #####:  154:string RoutingTable :: getMss()
+        -:  155:{
+    #####:  156:	return Mss;
+        -:  157:}
+    #####:  158:void RoutingTable :: setWindow(char data[][20])
+        -:  159:{
+    #####:  160:	Window=data[5];
+    #####:  161:}
+    #####:  162:string RoutingTable :: getWindow()
+        -:  163:{
+    #####:  164:	return Window;
+        -:  165:}
+    #####:  166:void RoutingTable :: setirtt(char data[][20])
+        -:  167:{
+    #####:  168:	irtt=data[6];
+    #####:  169:}
+    #####:  170:string RoutingTable :: getirtt()
+        -:  171:{
+    #####:  172:	return irtt;
+        -:  173:}
+    #####:  174:void RoutingTable :: setIface(char data[][20])
+        -:  175:{
+    #####:  176:	Iface=data[7];
+    #####:  177:}
+    #####:  178:string RoutingTable :: getIface()
+        -:  179:{
+    #####:  180:	return Iface;
+        -:  181:}
+        -:  182:
+    #####:  183:RoutingTable::~RoutingTable()
+    #####:  184:{}

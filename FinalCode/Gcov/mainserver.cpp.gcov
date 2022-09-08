@@ -1,0 +1,18 @@
+        -:    0:Source:mainserver.cpp
+        -:    1:#include<server.h>
+        -:    2:#include<netstat_r.h>
+        -:    3:#include<netstat_tcp.h>
+        -:    4:#include<netstat_udp.h>
+        -:    5:#include<netstat_listen.h>
+        -:    6:#include<netstat_firefox.h>
+        -:    7:
+    #####:    8:int main()
+        -:    9:{
+    #####:   10:	Server s;
+    #####:   11:	s.createSock();
+    #####:   12:	s.bindClient();
+    #####:   13:	s.listenClient();
+    #####:   14:	s.send_recv();
+    #####:   15:	s.closeSock();
+    #####:   16:	sl.close();
+    #####:   17:}

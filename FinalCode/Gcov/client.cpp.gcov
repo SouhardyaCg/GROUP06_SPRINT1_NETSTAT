@@ -1,0 +1,165 @@
+        -:    0:Source:client.cpp
+        -:    1:#include<client.h>
+        -:    2:#include<server.h>
+        -:    3:#include<netstat_r.h>
+        -:    4:#include<netstat_tcp.h>
+        -:    5:#include<netstat_udp.h>
+        -:    6:#include<netstat_listen.h>
+        -:    7:#include<netstat_firefox.h>
+        -:    8:
+        -:    9:
+    #####:   10:Client :: Client()								//constructor call
+        -:   11:{
+    #####:   12:}
+        -:   13:
+    #####:   14:void Client :: createSock()						//creating Socket
+        -:   15:{
+    #####:   16:	cl<<"INFO : In Create Socket"<<endl;
+    #####:   17:	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    #####:   18:		if(sockfd < 0)
+        -:   19:		{
+    #####:   20:			cl<<"ERROR : Socket didnot create."<<endl;
+    #####:   21:			exit(EXIT_FAILURE);
+        -:   22:		}
+        -:   23:		else
+        -:   24:		{
+    #####:   25:			cl<<"INFO : Socket created."<<endl;
+        -:   26:		}
+    #####:   27:}
+        -:   28:
+    #####:   29:void Client :: connectServer()					//Connecting to server
+        -:   30:{
+    #####:   31:	cl<<"INFO : In connectServer() function."<<endl;
+    #####:   32:	memset(&server_addr, '\0', sizeof(server_addr));
+        -:   33:
+    #####:   34:	server_addr.sin_family = AF_INET;				//Assigning the port and address to family
+    #####:   35:	server_addr.sin_port = htons(PORT);
+    #####:   36:	server_addr.sin_addr.s_addr = inet_addr(ADDR);
+        -:   37:
+        -:   38:	//establishing Connection with server
+    #####:   39:	client_fd = connect(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr));
+    #####:   40:	if(client_fd < 0){
+    #####:   41:		cl<<"FATAL : Error in connection."<<endl;
+    #####:   42:		exit(EXIT_FAILURE);
+        -:   43:	}
+        -:   44:	else
+        -:   45:	{
+    #####:   46:		cl<<"DEBUG : Connected to Server , PORT :"<<PORT<<" ADDRESS : "<<ADDR<<endl;
+    #####:   47:		cout<<"Connected to server."<<endl;
+        -:   48:	}
+    #####:   49:}
+        -:   50:
+    #####:   51:void Client :: send_recv(string temp) //sending and receiving info to and from server
+        -:   52:{
+        -:   53:
+        -:   54:	while(1)
+        -:   55:	{
+    #####:   56:		if(temp == "exit")
+        -:   57:		{
+    #####:   58:			close(sockfd);
+    #####:   59:			exit(EXIT_SUCCESS);
+        -:   60:		}
+        -:   61:		else
+        -:   62:		{
+    #####:   63:			if(send(sockfd, temp.c_str(), strlen(temp.c_str()),0)<0)
+        -:   64:			{
+    #####:   65:				cl<<"ERROR :"<<"Send Command error"<<endl;
+    #####:   66:				exit(EXIT_FAILURE);
+        -:   67:			}
+        -:   68:
+        -:   69:
+    #####:   70:		   		if(temp == "RT") //receiving from mainClient based on Command.
+        -:   71:				{
+        -:   72:					char buffData[SIZE];
+    #####:   73:					if(recvfrom(sockfd, buffData, sizeof(buffData),0,(struct sockaddr*)&client_addr, (socklen_t*)&client_addr_len)<0)
+        -:   74:					{
+        -:   75:					
+    #####:   76:						cl<<"ERROR :"<<"Receive RT Command error"<<endl;
+    #####:   77:						exit(EXIT_FAILURE);
+        -:   78:					}
+        -:   79:					else
+        -:   80:					{
+    #####:   81:						cl<<"INFO : Received Successfully RT table data"<<endl;
+        -:   82:				  	}
+    #####:   83:					string rtData=buffData;
+    #####:   84:					RTdriver(rtData);  //passing the raw data to driverFunction
+        -:   85:			
+    #####:   86:				}
+    #####:   87:				else if(temp == "TCP") //receiving from mainClient based on Command.
+        -:   88:				{
+        -:   89:					char buffData[SIZE];
+    #####:   90:					if(recvfrom(sockfd, buffData, sizeof(buffData),0,(struct sockaddr*)&client_addr, (socklen_t*)&client_addr_len)<0)
+        -:   91:					{
+    #####:   92:						cl<<"ERROR :"<<"Receive TCP Command error"<<endl;
+    #####:   93:						exit(EXIT_FAILURE);
+        -:   94:					}
+        -:   95:					else
+        -:   96:					{
+    #####:   97:						cl<<"INFO : Received Successfully TCP table data"<<endl;
+        -:   98:					}
+    #####:   99:					string tcpData=buffData;
+    #####:  100:					TCPdriver(tcpData); //passing the raw data to driverFunction
+    #####:  101:				}
+    #####:  102:				else if(temp == "UDP") //receiving from mainClient based on Command.
+        -:  103:				{
+        -:  104:					char buffData[SIZE];
+    #####:  105:					if(recvfrom(sockfd, buffData, sizeof(buffData),0,(struct sockaddr*)&client_addr, (socklen_t*)&client_addr_len)<0)
+        -:  106:					{
+    #####:  107:						cl<<"ERROR :"<<"Receive UDP Command error"<<endl;
+    #####:  108:						exit(EXIT_FAILURE);
+        -:  109:					}
+        -:  110:					else
+        -:  111:					{
+    #####:  112:						cl<<"INFO : Received Successfully UDP table data"<<endl;
+        -:  113:					}
+    #####:  114:					string udpData=buffData;
+    #####:  115:					UDPdriver(udpData); //passing the raw data to driverFunction
+        -:  116:					
+    #####:  117:				}
+    #####:  118:				else if(temp == "Listen") //receiving from mainClient based on Command.
+        -:  119:				{
+        -:  120:					char buffData[SIZE];
+    #####:  121:					if(recvfrom(sockfd, buffData, sizeof(buffData),0,(struct sockaddr*)&client_addr, (socklen_t*)&client_addr_len)<0)
+        -:  122:					{
+    #####:  123:						cl<<"ERROR :"<<"Receive TCP Connections with state LISTEN Command error"<<endl;
+    #####:  124:						exit(EXIT_FAILURE); 
+        -:  125:					}
+        -:  126:					else
+        -:  127:					{
+    #####:  128:						cl<<"INFO : Received Successfully TCP Connections with state LISTEN table data"<<endl;
+        -:  129:					}
+    #####:  130:					string listenData=buffData;
+    #####:  131:					listendriver(listenData); //passing the raw data to driverFunction
+    #####:  132:					}
+    #####:  133:				else if (temp == "Firefox") //receiving from mainClient based on Command.
+        -:  134:				{
+        -:  135:					char buffData[1000000];
+    #####:  136:					if(recvfrom(sockfd, buffData, sizeof(buffData),0,(struct sockaddr*)&client_addr, (socklen_t*)&client_addr_len)<0)
+        -:  137:					{
+    #####:  138:						cl<<"ERROR :"<<"Receive TCP Connections with application Firefox Command error"<<endl;
+    #####:  139:						exit(EXIT_FAILURE);
+        -:  140:					}
+        -:  141:					else
+        -:  142:					{
+    #####:  143:						cl<<"INFO : Received Successfully TCP Connections with application Firefox table data"<<endl;
+        -:  144:					}
+    #####:  145:					string firefoxData=buffData;
+    #####:  146:					firefoxdriver(buffData); //passing the raw data to driverFunction
+        -:  147:							
+    #####:  148:				}
+        -:  149:			}
+        -:  150:
+    #####:  151:	}	
+        -:  152:	
+        -:  153:}
+        -:  154:
+    #####:  155:void Client :: closeSock()
+        -:  156:{
+    #####:  157:	close(sockfd);
+    #####:  158:	cl<<"INFO : Closing client Socket"<<endl;
+    #####:  159:}
+        -:  160:
+    #####:  161:Client :: ~Client()
+        -:  162:{
+        -:  163:
+    #####:  164:}

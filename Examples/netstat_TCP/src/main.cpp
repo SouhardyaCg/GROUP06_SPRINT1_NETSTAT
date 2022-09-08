@@ -50,6 +50,7 @@ int main()
 			obj[i].displayTCP_Table();
 		}
 	}
+	log.close();
 }
 
 

@@ -1,0 +1,47 @@
+        -:    0:Source:mainclient.cpp
+        -:    1:#include<client.h>
+        -:    2:#include<netstat_r.h>
+        -:    3:#include<netstat_tcp.h>
+        -:    4:#include<netstat_udp.h>
+        -:    5:#include<netstat_listen.h>
+        -:    6:#include<netstat_firefox.h>
+        -:    7:
+        -:    8:
+    #####:    9:int main()
+        -:   10:{
+        -:   11:	
+    #####:   12:	Client c;
+    #####:   13:	c.createSock();
+    #####:   14:	c.connectServer();
+    #####:   15:	cout<<"\n";
+    #####:   16:	cout<<"------------WELCOME To PortScanner Implementation using Netstat-----------"<<endl;
+    #####:   17:	cout<<"\n";
+    #####:   18:	cout<<"\t\tFollowing are the commands given :"<<endl;
+    #####:   19:	cout<<"\t\tEnter RT for netstat -r"<<endl;
+    #####:   20:	cout<<"\t\tEnter TCP for netstat -tan"<<endl;
+    #####:   21:	cout<<"\t\tEnter UDP for netstat -uan"<<endl;
+    #####:   22:	cout<<"\t\tEnter Firefox for netstat -tanp | grep -i firefox"<<endl;
+    #####:   23:	cout<<"\t\tEnter Listen for netstat -tanp | grep -i LISTEN"<<endl;
+    #####:   24:	cout<<"\t\tEnter exit to exit code"<<endl;
+    #####:   25:	cout<<"\n";
+    #####:   26:	cout<<"---------------------------------------------------------------------------"<<endl;
+    #####:   27:	cout<<"Enter your Command :";
+    #####:   28:	string temp;
+    #####:   29:	cin>>temp;
+    #####:   30:	if(temp!="RT"&&temp!="TCP"&&temp!="UDP"&&temp!="Listen"&&temp!="Firefox"&&temp!="exit")
+        -:   31:	{
+    #####:   32:		cout<<"Invalid Choice"<<endl;
+    #####:   33:		exit(EXIT_FAILURE);
+        -:   34:	}
+    #####:   35:	else if(temp=="exit")
+        -:   36:	{
+    #####:   37:		exit(EXIT_SUCCESS);
+        -:   38:	}
+        -:   39:	else
+        -:   40:	{
+    #####:   41:		c.send_recv(temp);
+    #####:   42:		c.closeSock();	
+        -:   43:	}
+    #####:   44:	cl.close(); //closing global logFile
+    #####:   45:}
+        -:   46:

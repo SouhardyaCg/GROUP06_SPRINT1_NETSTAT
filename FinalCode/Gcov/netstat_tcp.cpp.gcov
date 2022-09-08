@@ -1,0 +1,161 @@
+        -:    0:Source:netstat_tcp.cpp
+        -:    1:#include<netstat_tcp.h>
+        -:    2:#include <client.h>
+        -:    3:#include <server.h>
+        -:    4:
+    #####:    5:void getTCP_Table() //Capture the output of command into a file
+        -:    6:{
+    #####:    7:	if(fork()==0)
+        -:    8:	{
+        -:    9:	
+    #####:   10:		int file=open("tcpFile.txt",O_WRONLY | O_CREAT,0777);
+    #####:   11:		dup2(file,STDOUT_FILENO);	//copying from one Fd to another FD
+    #####:   12:		close(file);
+    #####:   13:		char* cmd="netstat";
+    #####:   14:		char *args[]={"netstat","-tan",NULL};
+    #####:   15:		sl<<"WARNING : String to Const char*"<<endl;	
+    #####:   16:		sl<<"INFO : TCP File Created"<<endl;
+    #####:   17:		execvp(cmd,args);
+    #####:   18:		exit(EXIT_SUCCESS);
+        -:   19:	}
+        -:   20:	
+    #####:   21:}
+        -:   22:
+    #####:   23:string storeTCP_Table() //Read each record from a file and return an appended string seperated by |
+        -:   24:{
+    #####:   25:	sl<<"INFO :In StoreTCPTable"<<endl;
+    #####:   26:	getTCP_Table();
+    #####:   27:	fstream fs;
+    #####:   28:	string totalData;
+    #####:   29:	fs.open("tcpFile.txt",ios::in|ios::out);
+    #####:   30:	if(!fs)
+        -:   31:	{
+    #####:   32:		cout<<"No such File"<<endl;
+        -:   33:	}
+        -:   34:	else
+        -:   35:	{
+    #####:   36:		int count =0;
+    #####:   37:		string line;
+    #####:   38:		while(getline(fs,line))		//reading the records and appending
+        -:   39:		{
+    #####:   40:			count++;
+    #####:   41:			if(count>2)
+    #####:   42:				totalData+=line+"|";
+        -:   43:			else
+    #####:   44:				continue;
+        -:   45:		}
+    #####:   46:	}
+    #####:   47:	fs.close();
+    #####:   48:	sl<<"INFO :Ended StoreTCPTable"<<endl;
+    #####:   49:	return totalData;
+    #####:   50:}
+    #####:   51:void TCPdriver(string tcpData) //main driver function responsible for execution
+        -:   52:{
+    #####:   53:	cl<<"INFO :In TCPdriver"<<endl;
+    #####:   54:		list<string> myData;
+        -:   55:		char data[6][20];
+        -:   56:
+    #####:   57:		string record;
+    #####:   58:		stringstream str(tcpData);
+    #####:   59:		while(getline(str,record,'|'))		//parsing the appended data to store each record in STL
+        -:   60:		{
+    #####:   61:			myData.push_back(record);
+        -:   62:		}
+        -:   63:
+    #####:   64:		int size=myData.size();
+    #####:   65:		int i=0;
+    #####:   66:		netstatTCP tcp[size];
+        -:   67:
+    #####:   68:		for(auto it=myData.begin();it!=myData.end();it++)
+        -:   69:		{
+    #####:   70:			string str=*it;
+    #####:   71:			stringstream st(str);
+    #####:   72:			string temp;
+    #####:   73:			int j=0;
+    #####:   74:			while(st)
+        -:   75:			{
+    #####:   76:				st>>temp;							//parsing again to store in eacg attribute
+    #####:   77:				if(st)
+        -:   78:				{
+    #####:   79:					strcpy(data[j],temp.c_str());
+    #####:   80:					j++;
+        -:   81:				}
+        -:   82:			}
+    #####:   83:			tcp[i].setProto(data);
+    #####:   84:			tcp[i].setRecv(data);
+    #####:   85:			tcp[i].setSend(data);
+    #####:   86:			tcp[i].setLocal_Address(data);
+    #####:   87:			tcp[i].setForeign_Address(data);
+    #####:   88:			tcp[i].setState(data);
+        -:   89:
+    #####:   90:			i++;
+    #####:   91:		}
+    #####:   92:	for(int i=0;i<size;i++) //Displaying with with respect to objects
+        -:   93:	{
+    #####:   94:		cout<<"-------------- Kernel TCP Table Dataset "<<i+1<<" ------------------"<<endl;
+    #####:   95:		cout<<"\tProto :"<<tcp[i].getProto()<<endl;
+    #####:   96:		cout<<"\tRecv-Q :"<<tcp[i].getRecv()<<endl;
+    #####:   97:		cout<<"\tSend-Q :"<<tcp[i].getSend()<<endl;
+    #####:   98:		cout<<"\tLocal Address :"<<tcp[i].getLocal_Address()<<endl;
+    #####:   99:		cout<<"\tForeign Address :"<<tcp[i].getForeign_Address()<<endl;
+    #####:  100:		cout<<"\tState :"<<tcp[i].getState()<<endl;
+    #####:  101:		cout<<"---------------------------------------------------------------------"<<endl;
+        -:  102:	}
+        -:  103:
+    #####:  104:		cl<<"INFO :Ended TCPdriver Execution"<<endl;
+    #####:  105:}
+        -:  106:
+    #####:  107:netstatTCP :: netstatTCP()
+    #####:  108:{}
+        -:  109:
+    #####:  110:void netstatTCP :: setProto(char data[][20])
+        -:  111:{
+    #####:  112:	Proto=data[0];	
+    #####:  113:}
+    #####:  114:string netstatTCP :: getProto()
+        -:  115:{
+    #####:  116:	return Proto;
+        -:  117:}
+    #####:  118:void netstatTCP :: setRecv(char data[][20])
+        -:  119:{
+    #####:  120:	Recv=data[1];
+    #####:  121:}
+    #####:  122:string netstatTCP :: getRecv()
+        -:  123:{
+    #####:  124:	return Recv;
+        -:  125:}
+    #####:  126:void netstatTCP :: setSend(char data[][20])
+        -:  127:{
+    #####:  128:	Send=data[2];
+    #####:  129:}
+    #####:  130:string netstatTCP :: getSend()
+        -:  131:{
+    #####:  132:	return Send;
+        -:  133:}
+    #####:  134:void netstatTCP :: setLocal_Address(char data[][20])
+        -:  135:{
+    #####:  136:	Local_Address=data[3];
+    #####:  137:}
+    #####:  138:string netstatTCP :: getLocal_Address()
+        -:  139:{
+    #####:  140:	return Local_Address;
+        -:  141:}
+    #####:  142:void netstatTCP :: setForeign_Address(char data[][20])
+        -:  143:{
+    #####:  144:	Foreign_Address=data[4];
+    #####:  145:}
+    #####:  146:string netstatTCP :: getForeign_Address()
+        -:  147:{
+    #####:  148:	return Foreign_Address;
+        -:  149:}
+    #####:  150:void netstatTCP :: setState(char data[][20])
+        -:  151:{
+    #####:  152:	State=data[5];
+    #####:  153:}
+    #####:  154:string netstatTCP :: getState()
+        -:  155:{
+    #####:  156:	return State;
+        -:  157:}
+        -:  158:
+    #####:  159:netstatTCP::~netstatTCP()
+    #####:  160:{}

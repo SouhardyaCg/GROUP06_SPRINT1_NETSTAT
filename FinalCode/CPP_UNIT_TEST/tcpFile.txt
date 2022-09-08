@@ -1,0 +1,24 @@
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN     
+tcp        0      0 10.0.2.15:34780         142.250.183.229:443     TIME_WAIT  
+tcp        0      0 10.0.2.15:54868         142.250.193.163:443     ESTABLISHED
+tcp        0      0 10.0.2.15:60882         44.228.207.167:443      ESTABLISHED
+tcp        0      0 10.0.2.15:36346         34.117.237.239:443      ESTABLISHED
+tcp6       0      0 ::1:631                 :::*                    LISTEN     
+tcp        0      0 10.0.2.15:51200         142.250.195.74:443      TIME_WAIT  
+tcp        0      0 10.0.2.15:49088         142.250.77.106:443      TIME_WAIT  
+tcp        0      0 10.0.2.15:37914         34.120.208.123:443      TIME_WAIT  
+tcp        0      0 10.0.2.15:60882         44.228.207.167:443      ESTABLISHED
+tcp        0      0 10.0.2.15:48596         35.232.111.17:80        TIME_WAIT  
+tcp        0      0 10.0.2.15:42884         142.250.196.78:443      TIME_WAIT  
+tcp        0      0 10.0.2.15:36506         52.85.234.114:443       TIME_WAIT  
+tcp        0      0 10.0.2.15:60300         34.120.115.102:443      TIME_WAIT  
+tcp        0      0 10.0.2.15:44402         142.250.67.37:443       TIME_WAIT  
+tcp        0      0 10.0.2.15:34676         142.250.195.202:443     TIME_WAIT  
+tcp        0      0 10.0.2.15:43418         172.217.167.142:443     TIME_WAIT  
+tcp        0      0 10.0.2.15:40274         172.217.160.142:443     TIME_WAIT  
+tcp        0      0 10.0.2.15:44396         142.250.67.37:443       TIME_WAIT  
+tcp6       0      0 ::1:631                 :::*                    LISTEN     
+tcp6       0      0 ::1:631                 :::*                    LISTEN     
